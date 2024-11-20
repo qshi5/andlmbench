@@ -9,6 +9,9 @@
 typedef unsigned char bool_t;
 #endif
 
+#include <stdlib.h>
+#include <string.h>
+
 #include	<assert.h>
 #include        <ctype.h>
 #include        <stdio.h>
@@ -80,14 +83,6 @@ typedef int64_t int64;
 typedef long long int64;
 #endif /* HAVE_int64_t */
 #endif /* HAVE_int64 */
-
-#ifndef HAVE_socklen_t
-typedef int socklen_t;
-#endif
-
-#ifndef HAVE_off64_t
-typedef int64 off64_t;
-#endif
 
 #define NO_PORTMAPPER
 

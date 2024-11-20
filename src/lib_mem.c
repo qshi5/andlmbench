@@ -471,14 +471,14 @@ tlb_initialize(iter_t iterations, void* cookie)
 
 	/* first, layout the sequence of page accesses */
 	for (i = 0; i < npages; ++i) {
-		p = addr[i] = (char*)valloc(pagesize);
+		p = addr[i] = (char*)memalign(sysconf(_SC_PAGESIZE), pagesize); // (char*)valloc(pagesize);
 		if (!p) {
 			perror("tlb_initialize: valloc");
 			exit(4);
 		}
 		if ((unsigned long)p % pagesize) {
 			free(p);
-			p = addr[i] = (char*)valloc(2 * pagesize);
+			p = addr[i] = (char*) memalign(sysconf(_SC_PAGESIZE), 2 * pagesize); //valloc(2 * pagesize);
 			if (!p) {
 				perror("tlb_initialize: valloc");
 				exit(5);
@@ -547,7 +547,7 @@ words_initialize(size_t max, int scale)
 
 
 ssize_t
-line_find(size_t len, int warmup, int repetitions, struct mem_state* state)
+line_find(size_t len, __attribute__((unused)) int warmup, int repetitions, struct mem_state* state)
 {
 	size_t 	i, big_jump, line;
 	size_t	maxline = getpagesize() / 16;
@@ -560,7 +560,7 @@ line_find(size_t len, int warmup, int repetitions, struct mem_state* state)
 
 	/*
 	fprintf(stderr, "line_find(%lu, ...): entering\n", (unsigned long)len);
-	/**/
+	*/
 
 	state->width = 1;
 	state->line = sizeof(char*);
@@ -589,12 +589,12 @@ line_find(size_t len, int warmup, int repetitions, struct mem_state* state)
 	mem_cleanup(0, state);
 	/*
 	fprintf(stderr, "line_find(%lu, ...): returning %lu\n", (unsigned long)len, (unsigned long)line);
-	/**/
+	*/
 	return line;
 }
 
 double
-line_test(size_t line, int warmup, int repetitions, struct mem_state* state)
+line_test(size_t line, __attribute__((unused)) int warmup, int repetitions, struct mem_state* state)
 {
 	size_t	i;
 	size_t	npages = state->npages;
@@ -630,7 +630,7 @@ line_test(size_t line, int warmup, int repetitions, struct mem_state* state)
 		BENCH1(HUNDRED(p = *(char**)p;),0);
 		/*
 		fprintf(stderr, "%d\t%d\t%d\n", line, (int)gettime(), (int)get_n()); 
-		/**/
+		*/
 		insertsort(gettime(), get_n(), r);
 	}
 	use_pointer(p);
@@ -641,7 +641,7 @@ line_test(size_t line, int warmup, int repetitions, struct mem_state* state)
 	
 	/*
 	fprintf(stderr, "%d\t%.5f\t%d\n", line, t, state->len); 
-	/**/
+	*/
 
 	/* fixup full path again */
 	if (nlines < state->nlines) {
@@ -666,7 +666,7 @@ line_test(size_t line, int warmup, int repetitions, struct mem_state* state)
 }
 
 double
-par_mem(size_t len, int warmup, int repetitions, struct mem_state* state)
+par_mem(size_t len, __attribute__((unused)) int warmup, int repetitions, struct mem_state* state)
 {
 	int	i, j;
 	iter_t	__n = 1;
@@ -696,7 +696,7 @@ par_mem(size_t len, int warmup, int repetitions, struct mem_state* state)
 			if (state->len == 32768 && i == 7) {
 				fprintf(stderr, "\tj=%d, line=%d, word=%d, page=%d, _line=%d, _word=%d\n", j, line, word, line / lines_per_page, line % lines_per_page, word % state->nwords);
 			}
-			/**/
+			*/
 			state->p[j] = state->base + 
 				state->pages[line / lines_per_page] + 
 				state->lines[line % lines_per_page] + 
@@ -712,7 +712,7 @@ par_mem(size_t len, int warmup, int repetitions, struct mem_state* state)
 			par /= (double)gettime() / (double)((i + 1) * get_n());
 			/*
 			fprintf(stderr, "par_mem(%d): i=%d, p=%5.2f, l=%d, lpp=%d, lpc=%d, nl=%d, wpc=%d\n", len, i, par, state->line, state->pagesize / state->line, (len / state->line) / (i + 1), len / state->line, state->nwords / (i + 1));
-			/**/
+			*/
 			if (par > max_par) {
 				max_par = par;
 			}

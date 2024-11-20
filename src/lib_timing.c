@@ -67,7 +67,7 @@ rusage(void)
 #endif	/* RUSAGE */
 
 void
-lmbench_usage(int argc, char *argv[], char* usage)
+lmbench_usage(__attribute__((unused)) int argc, char *argv[], char* usage)
 {
 	fprintf(stderr,"Usage: %s %s", argv[0], usage);
 	exit(-1);
@@ -75,7 +75,7 @@ lmbench_usage(int argc, char *argv[], char* usage)
 
 
 void
-sigchld_wait_handler(int signo)
+sigchld_wait_handler(__attribute__((unused)) int signo)
 {
 	wait(0);
 	signal(SIGCHLD, sigchld_wait_handler);
@@ -90,13 +90,13 @@ void (*benchmp_sigchld_handler)(int);
 void (*benchmp_sigalrm_handler)(int);
 
 void
-benchmp_sigterm(int signo)
+benchmp_sigterm(__attribute__((unused)) int signo)
 {
 	benchmp_sigterm_received = 1;
 }
 
 void
-benchmp_sigchld(int signo)
+benchmp_sigchld(__attribute__((unused)) int signo)
 {
 	signal(SIGCHLD, SIG_DFL);
 	benchmp_sigchld_received = 1;
@@ -106,7 +106,7 @@ benchmp_sigchld(int signo)
 }
 
 void
-benchmp_sigalrm(int signo)
+benchmp_sigalrm(__attribute__((unused)) int signo)
 {
 	signal(SIGALRM, SIG_IGN);
 	kill(benchmp_sigalrm_pid, SIGTERM);
@@ -328,10 +328,10 @@ benchmp_parent(	int response,
 		int exit_signal,
 		pid_t* pids,
 		int parallel, 
-	        iter_t iterations,
+	    __attribute__((unused)) iter_t iterations,
 		int warmup,
 		int repetitions,
-		int enough
+		__attribute__((unused)) int enough
 		)
 {
 	int		i, j;
@@ -544,7 +544,7 @@ benchmp_childid()
 }
 
 void
-benchmp_child_sigchld(int signo)
+benchmp_child_sigchld(__attribute__((unused)) int signo)
 {
 #ifdef _DEBUG
 	fprintf(stderr, "benchmp_child_sigchld handler\n");
@@ -557,7 +557,7 @@ benchmp_child_sigchld(int signo)
 }
 
 void
-benchmp_child_sigterm(int signo)
+benchmp_child_sigterm(__attribute__((unused)) int signo)
 {
 	signal(SIGTERM, SIG_IGN);
 	if (_benchmp_child_state.cleanup) {

@@ -176,7 +176,7 @@ sched_ncpus()
  * returns -1 on error
  */
 int
-sched_pin(int cpu)
+sched_pin(__attribute__((unused)) int cpu)
 {
 	int retval = -1;
 

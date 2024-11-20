@@ -98,7 +98,7 @@ nano_quartile(uint64 n)
  * print the page|line|word offset for each link in the pointer chain.
  */
 void
-print_mem(char* addr, size_t size, size_t line)
+print_mem(char* addr, __attribute__((unused)) size_t size, size_t line)
 {
 	char*	p;
 	uint64	base, off;
